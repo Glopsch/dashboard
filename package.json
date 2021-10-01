@@ -1,0 +1,29 @@
+{
+  "name": "dashboard",
+  "version": "0.0.0",
+  "description": "Webbasiertes Dashboard zur Kontrolle und Analyse von Geräten im Heimnetzwerk",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Glopsch/dashboard.git"
+  },
+  "keywords": [
+    "dashboard"
+  ],
+  "author": "Daniel Schleicher, Jeremias Renner, Leon Hubert-Grivic",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Glopsch/dashboard/issues"
+  },
+  "homepage": "https://github.com/Glopsch/dashboard#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
+}
