@@ -1,6 +1,6 @@
 {
   "name": "dashboard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Webbasiertes Dashboard zur Kontrolle und Analyse von Geräten im Heimnetzwerk",
   "main": "app.js",
   "scripts": {
@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/Glopsch/dashboard#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "node-nmap": "^4.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"

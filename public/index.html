@@ -29,6 +29,38 @@
         <div class="row" style="text-align: center;">
             <h2 style="color: #75FF38;">Network name / ip / ...</h2>
         </div>
+        
+        <p>192.168.1.0</p>
+
+        <button onclick="scanNetwork()">Network</button>
+        <input id="network_ip" type="text" placeholder="Netzwerk-IP"><span>/</span>
+        <input id="network_suffix" type="text" placeholder="Suffix">
+        <p id="network_results"></p>
+        <button onclick="scanDetailed()">Detail</button>
+        <input id="detail_ip" type="text" placeholder="Device-IP">
+        <p class="text-green" id="detail_results"></p>
+
+        <script>
+            function scanNetwork() {
+                document.getElementById('network_results').innerText = "Scanne Netzwerk...";
+                fetch(`http://localhost:3000/scan/network/${document.getElementById("network_ip").value}/${document.getElementById("network_suffix").value}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('network_results').innerText = JSON.stringify(data);
+                });
+            }
+            function scanDetailed() {
+                document.getElementById('detail_results').innerText = "Scanne Gerät...";
+                fetch(`http://localhost:3000/scan/detail/${document.getElementById("detail_ip").value}`)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('detail_results').innerText = JSON.stringify(data);
+                });
+            }
+        </script>
+        
         <div class="row">
             <table>
                 <tr>
