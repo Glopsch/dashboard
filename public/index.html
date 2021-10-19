@@ -36,39 +36,23 @@
         <input id="network_ip" type="text" placeholder="Netzwerk-IP"><span>/</span>
         <input id="network_suffix" type="text" placeholder="Suffix">
         <p id="network_results"></p>
+
+        <button onclick="scanPorts()">Ports</button>
+        <input id="ports_ip" type="text" placeholder="Device-IP">
+        <p class="text-green" id="ports_results"></p>
+        
         <button onclick="scanDetailed()">Detail</button>
         <input id="detail_ip" type="text" placeholder="Device-IP">
         <p class="text-green" id="detail_results"></p>
-
-        <script>
-            function scanNetwork() {
-                document.getElementById('network_results').innerText = "Scanne Netzwerk...";
-                fetch(`http://localhost:3000/scan/network/${document.getElementById("network_ip").value}/${document.getElementById("network_suffix").value}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    document.getElementById('network_results').innerText = JSON.stringify(data);
-                });
-            }
-            function scanDetailed() {
-                document.getElementById('detail_results').innerText = "Scanne Gerät...";
-                fetch(`http://localhost:3000/scan/detail/${document.getElementById("detail_ip").value}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data);
-                    document.getElementById('detail_results').innerText = JSON.stringify(data);
-                });
-            }
-        </script>
         
         <div class="row">
             <table>
                 <tr>
                     <td>
-                        <h3 style="display: inline-block;">device1 name </h3>
+                        <h3 id="d1" style="display: inline-block;">device1 name </h3>
                         <a href="" class="b-dropdown">&#9650;</a>
                         <div class="t-devices">
-                            <table>
+                            <table id="t1">
                                 <tr>
                                     <td class="text-green">MAC</td><td>12:34:56:78</td>
                                 </tr>
@@ -156,6 +140,47 @@
         <small>Leon Hubert-Grivic</small>
 
     </footer>
+
+    <script>
+        function scanNetwork() {
+            document.getElementById('network_results').innerText = "Scanne Netzwerk...";
+            fetch(`http://localhost:3000/scan/network/${document.getElementById("network_ip").value}/${document.getElementById("network_suffix").value}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('network_results').innerText = JSON.stringify(data);
+                document.getElementById('t1').innerHTML = formatResult(data);
+            });
+        }
+        function scanPorts() {
+            document.getElementById('ports_results').innerText = "Scanne Ports...";
+            fetch(`http://localhost:3000/scan/ports/${document.getElementById("ports_ip").value}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('ports_results').innerText = JSON.stringify(data);
+            });
+        }
+        function scanDetailed() {
+            document.getElementById('detail_results').innerText = "Scanne Gerät...";
+            fetch(`http://localhost:3000/scan/detail/${document.getElementById("detail_ip").value}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('detail_results').innerText = JSON.stringify(data);
+            });
+        }
+
+        function formatResult(resultData) {
+            let formatted = "";
+            console.log("HEELLOOO");
+            for (let i = 0; i < resultData.length; i++) {
+                formatted += `<tr><td class="text-green">MAC</td><td>${JSON.stringify(resultData[i])}</td></tr>\n`;
+            }
+            console.log(formatted);
+            return formatted;
+        }
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
