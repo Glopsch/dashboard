@@ -31,19 +31,15 @@
         </div>
         <div class="row justify-content-center">
             <div class="col">
-                <form class="text-center">
-                    <div class="form-group">
-                      <label style="font-size: 1.25rem;" for="exampleInputPassword1">Netzwerkkennung</label>
-                      <input type="text" class="form-control bg-transparent" id="exampleInputPassword1" placeholder="Bitte eingeben">
-                      <small id="emailHelp" class="form-text text-muted">Der Name den Sie für Ihr Netzwerk gewählt haben</small>
-                    </div>
+                <form id="login-form" onsubmit="tryLogin(e)" class="text-center">
                     <div class="form-group">
                       <label style="font-size: 1.25rem;" for="exampleInputPassword1">Passwort</label>
-                      <input type="password" class="form-control bg-transparent" id="exampleInputPassword1" placeholder="Bitte eingeben">
+                      <input type="password" class="form-control bg-transparent" id="password" placeholder="Bitte eingeben">
                       <small id="emailHelp" class="form-text text-muted">Das Kennwort das Sie für Ihr Netzwerk gewählt haben</small>
                     </div>
                     <br>
-                    <a href="/"><button class="btn b-outline">Anmelden</button></a>
+                    <button type="submit" class="btn b-outline">Anmelden</button>
+                    <p id="login-indicator"></p>
                 </form>
             </div>
         </div>
@@ -69,6 +65,26 @@
         <small>Leon Hubert-Grivic</small>
 
     </footer>
+
+    <script>
+        function tryLogin(e) {
+            e.preventDefault();
+            const formData = new URLSearchParams(new FormData(document.getElementById("password")));
+            document.getElementById('login-indicator').innerText = "Authentifiziere...";
+            fetch(`http://localhost:3000/auth/login`, {
+                method: 'post',
+                body: formData,
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                document.getElementById('login-indicator').innerText = JSON.stringify(data);
+            });
+        }
+    </script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

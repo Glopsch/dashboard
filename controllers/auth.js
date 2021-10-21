@@ -88,6 +88,10 @@ async function handleLoginPost( req, res ) {
         { message: 'Login error' },
       );
     }
+*/
+    console.log(req.body);
+    res.json( { message: "Logged in" } )
+    /*
 
 */
 }

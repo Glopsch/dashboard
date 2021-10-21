@@ -72,6 +72,10 @@ hr {
   border-color: #50AB27;
 }
 
+hr.light {
+  border-color: #F6F0F4;
+}
+
 a {
   /* color: #2BFFF7 */
   color: #FFCC1F;
@@ -109,6 +113,16 @@ table {
     border: 1px solid #27E86D;
     border-radius: 20px;
     padding: 5px;
+  }
+
+  .t-ports {
+    border: 1px solid #F6F0F4;
+    border-radius: 20px;
+    padding: 5px;
+  }
+
+  .device-network {
+    color: #75FF38;
   }
 
   .device-detail {
