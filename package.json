@@ -21,7 +21,10 @@
   },
   "homepage": "https://github.com/Glopsch/dashboard#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "node-nmap": "^4.0.0"
   },
   "devDependencies": {
