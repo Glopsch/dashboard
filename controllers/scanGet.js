@@ -1,6 +1,6 @@
 var nmap = require('node-nmap');
 
-nmap.nmapLocation = 'C:\\Program Files (x86)\\Nmap\\nmap.exe'; // "nmap"; //default
+nmap.nmapLocation = 'nmap'; // "nmap"; //default
 
 function handleNetworkScanGet(req, res) {
     //    Accepts array or comma separarted string for custom nmap commands in the second argument.
