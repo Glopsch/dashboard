@@ -13,12 +13,12 @@
 <body>
     <header style="border-bottom: 1px solid #75FF38;">
         <nav class="navbar navbar-expand-lg navbar-dark">
-            <h1 style="display: inline-table; color: #F6F0F4;"><span style="color: #75FF38">Dash</span>board</h1>
-            <div>
+            <a href="/"><h1 style="display: inline-table; color: #F6F0F4;"><span style="color: #75FF38">Dash</span>board</h1></a>
+            <!-- <dev>
                 <a href="/" style="display: inline-table; float: right; margin-right: 1rem">
                     <button class="b-outline" style="">Optionen</button>
                 </a>
-            </div>
+            </dev> -->
         </nav>
     </header>
 
@@ -31,15 +31,15 @@
         </div>
         <div class="row justify-content-center">
             <div class="col">
-                <form id="login-form" onsubmit="tryLogin(e)" class="text-center">
+                <form class="text-center">
                     <div class="form-group">
-                      <label style="font-size: 1.25rem;" for="exampleInputPassword1">Passwort</label>
-                      <input type="password" class="form-control bg-transparent" id="password" placeholder="Bitte eingeben">
-                      <small id="emailHelp" class="form-text text-muted">Das Kennwort das Sie für Ihr Netzwerk gewählt haben</small>
+                      <label style="font-size: 1.25rem;" for="password">Passwort</label>
+                      <input type="password" class="form-control bg-transparent" id="password" name="password" placeholder="Bitte eingeben">
+                      <small id="pwHelp" class="form-text text-muted">Das Kennwort das Sie für Ihr Netzwerk gewählt haben</small>
                     </div>
-                    <br>
-                    <button type="submit" class="btn b-outline">Anmelden</button>
-                    <p id="login-indicator"></p>
+                    <code class="text-danger" id="login-indicator"></code>
+                    <br><br>
+                    <button type="button" onclick="tryLogin()" class="btn b-outline">Anmelden</button>
                 </form>
             </div>
         </div>
@@ -67,21 +67,34 @@
     </footer>
 
     <script>
-        function tryLogin(e) {
-            e.preventDefault();
-            const formData = new URLSearchParams(new FormData(document.getElementById("password")));
-            document.getElementById('login-indicator').innerText = "Authentifiziere...";
-            fetch(`http://localhost:3000/auth/login`, {
+        function tryLogin() {
+            document.getElementById('login-indicator').innerText = "";
+            const formData = new FormData();
+            formData.append("password", document.getElementById("password").value);
+            const searchParams = new URLSearchParams(formData);
+            fetch(`/auth/login`, {
                 method: 'post',
-                body: formData,
-                headers: {
-                    "Content-Type": "multipart/form-data"
+                body: searchParams
+            })
+            .then(response => {
+                console.log(response);
+                if(response.ok)
+                    return response.json()
+                else {
+                    if(response.status === 401) {
+                        document.getElementById('login-indicator').innerText = "Falsches Passwort";
+                        document.getElementById("password").value = "";
+                    }
+                    throw new Error('Fehler');
                 }
             })
-            .then(response => response.json())
             .then(data => {
                 console.log(data);
-                document.getElementById('login-indicator').innerText = JSON.stringify(data);
+                window.localStorage.setItem('dash_tkn', data.token);
+                window.location.href = "/";
+            })
+            .catch((err) => {
+                console.log(err);
             });
         }
     </script>

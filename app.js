@@ -6,7 +6,7 @@ const auth              = require( './controllers/auth' );
 const { requireAuth }   = require( './middleware/requireAuth' );
 
 const app = express();
-const port = 3000;
+const port = 80;
 
 app.use(express.json());
 app.use(express.urlencoded({
@@ -16,7 +16,7 @@ app.use(express.urlencoded({
 app.use(express.static('public'));
 
 
-app.get('/scan/network/:ip/:suffix', requireAuth, (req, res) => {
+app.get('/scan/network', requireAuth, (req, res) => {
   scan.handleNetworkScanGet(req, res);
 });
 // app.get('/scan/ports/:ip', requireAuth, (req, res) => {
