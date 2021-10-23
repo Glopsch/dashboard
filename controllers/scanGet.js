@@ -1,5 +1,6 @@
 var nmap = require('node-nmap');
 
+
 nmap.nmapLocation = process.env.NMAP_LOCATION || "nmap"; // "nmap"; //default
 
 const networkIP     = "192.168.2.0";
