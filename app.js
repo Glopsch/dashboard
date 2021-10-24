@@ -19,13 +19,9 @@ app.use(express.static('public'));
 app.get('/scan/network', requireAuth, (req, res) => {
   scan.handleNetworkScanGet(req, res);
 });
-// app.get('/scan/ports/:ip', requireAuth, (req, res) => {
-//   scan.handlePortScanGet(req, res);
-// });
 app.get('/scan/detail/:ip', requireAuth, (req, res) => {
   scan.handleDetailScanGet(req, res);
 });
-
 
 app.post('/auth/init', (req, res) => {
   auth.handleInitPost(req, res);
