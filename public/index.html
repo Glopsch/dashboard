@@ -36,10 +36,6 @@
         <input id="network_suffix" type="text" placeholder="Suffix"> -->
 
         <p class="text-green" id="network_results"></p>
-
-        <!-- <button onclick="scanPorts()">Ports</button>
-        <input id="ports_ip" type="text" placeholder="Device-IP">
-        <p class="text-green" id="ports_results"></p> -->
         
         <!-- <button onclick="scanDetailed()">Detail</button>
         <input id="detail_ip" type="text" placeholder="Device-IP">
@@ -48,117 +44,6 @@
         
         <div class="row">
             <table id="t-devices">
-                <!-- <tr>
-                    <td>
-                        <h3 id="d1" style="display: inline-block;">device1 name </h3>
-                        <a class="b-dropdown" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">&#9650;</a>
-                        <div class="t-device collapse" id="collapseExample">
-                            <table id="t1">
-                                <tr>
-                                    <td class="text-green">MAC</td><td>12:34:56:78</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">IP</td><td>123.32.2.213</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">Manufacturer</td><td>IBM</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">...</td><td>...</td>
-                                </tr>
-                            </table>
-                            <div style="text-align: center; padding: 10px 0">
-                                <button id="detail_results" class="b-filled-orange" onclick="scanDetailed()">Detailscan</button>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h3 id="d2" style="display: inline-block;">device2 name </h3>
-                        <a href="" class="b-dropdown">&#9650;</a>
-                        <div class="t-device">
-                            <table id="t2">
-                                <tr>
-                                    <td class="text-green">MAC</td><td>12:34:56:78</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">IP</td><td>123.32.2.213</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">Manufacturer</td><td>IBM</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">...</td><td>...</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><hr></td>
-                                </tr>
-                                <tr>
-                                    <td class="device-detail">Online seit</td><td>12.12.2012, 12:12</td>
-                                </tr>
-                                <tr>
-                                    <td class="device-detail">Verbindung</td><td>WLAN</td>
-                                </tr>
-                                <tr>
-                                    <td class="device-detail">...</td><td>...</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div style="text-align: center; padding-top: 10px;">
-                            <button id="detail_results2" class="b-filled-orange" onclick="scanDetailed()">Detailscan</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h3 id="d3" style="display: inline-block;">device3 name</h3>
-                        <a href="" class="b-dropdown">&#9650;</a>
-                        <div class="t-device">
-                            <table id="t3">
-                                <tr>
-                                    <td class="text-green">MAC</td><td>12:34:56:78</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">IP</td><td>123.32.2.213</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">Manufacturer</td><td>IBM</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-green">...</td><td>...</td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2"><hr></td>
-                                </tr>
-                                <tr>
-                                    <td class="device-detail">Online seit</td><td>12.12.2012, 12:12</td>
-                                </tr>
-                                <tr>
-                                    <td class="device-detail">Verbindung</td><td>WLAN</td>
-                                </tr>
-                                <tr>
-                                    <td class="device-detail">...</td><td>...</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div style="text-align: center; padding-top: 10px;">
-                            <button id="detail_results3" class="b-filled-orange" onclick="scanDetailed()">Detailscan</button>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h3 style="display: inline-block;">device4 name</h3>
-                        <a href="" class="b-dropdown">&#9660;</a>
-                        <ul></ul>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h3>. . .</h3>
-                    </td>
-                </tr> -->
             </table>
         </div>
     </section>
@@ -173,11 +58,7 @@
     </footer>
 
     <script>
-        if(!window.localStorage.getItem("dash_tkn")) //TODO
-            window.location.href = "/login.html";
-        else {
-            scanNetwork();
-        }
+        scanNetwork();
 
         function logout() {
             window.localStorage.removeItem('dash_tkn');
@@ -186,66 +67,76 @@
 
         function scanNetwork() {
             document.getElementById('network_results').innerText = "Scanne Netzwerk...";
-            fetch(`/scan/network`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                document.getElementById('network_results').innerText = ""; //for debugging: JSON.stringify(data);
-                formatNetwork(data);
-                // document.getElementById(`d${1}`).innerText = data[0].hostname;
-                for(var i = 0; i < data.length; i++) {
-                }
-            });
+            const token = window.localStorage.getItem('dash_tkn');
+            if(token) {
+                fetch(`/scan/network`, {
+                    method: "get",
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`
+                    })
+                })
+                .then(response => {
+                    console.log(response);
+                    if(response.ok)
+                        return response.json()
+                    else {
+                        if(response.status === 401) {
+                            logout();
+                        }
+                    }
+                })
+                .then(data => {
+                    console.log(data);
+                    document.getElementById('network_results').innerText = ""; //for debugging: JSON.stringify(data);
+                    formatNetwork(data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            } else {
+                logout();
+            }
         }
-        // function scanPorts() {
-        //     document.getElementById('ports_results').innerText = "Scanne Ports...";
-        //     fetch(`http://localhost/scan/ports/${document.getElementById("ports_ip").value}`)
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         document.getElementById('ports_results').innerText = JSON.stringify(data);
-        //     });
-        // }
-
-        function scanDetailed_old() {
-            document.getElementById('detail_results').innerText = "Scanne Gerät...";
-            fetch(`/scan/detail/${document.getElementById("detail_ip").value || "192.168.2.1"}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                document.getElementById('detail_results').innerText = "Details ausblenden"
-                formatDetails(data);
-            });
-        }
-
+        
         function scanDetailed(deviceID, ip) {
             document.getElementById(`detail-button-d${deviceID}`).innerText = "Scanne Gerät...";
-            fetch(`/scan/detail/${ip}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                document.getElementById(`detail-button-d${deviceID}`).innerText = "Details ausblenden";
-                document.getElementById(`detail-button-d${deviceID}`).addEventListener("click", () => hideDetails(deviceID, data.ip));
-                // document.getElementById(`detail-button-d${deviceID}`).onclick = `() => hideDetails('${deviceID}', '${ip}')`;
-                console.log("Helo");
-                formatDetails(deviceID, data);
-            });
+            const token = window.localStorage.getItem('dash_tkn');
+            if(token) {
+                fetch(`/scan/detail/${ip}`, {
+                    method: "get",
+                    headers: new Headers({
+                        'Authorization': `Bearer ${token}`
+                    })
+                })
+                .then(response => {
+                    console.log(response);
+                    if(response.ok)
+                        return response.json()
+                    else {
+                        if(response.status === 401) {
+                            logout();
+                        }
+                    }
+                })
+                .then(data => {
+                    console.log(data);
+                    document.getElementById(`detail-button-d${deviceID}`).innerText = "Details ausblenden";
+                    document.getElementById(`detail-button-d${deviceID}`).addEventListener("click", () => hideDetails(deviceID, data.ip));
+                    // document.getElementById(`detail-button-d${deviceID}`).onclick = `() => hideDetails('${deviceID}', '${ip}')`;
+                    console.log("Helo");
+                    formatDetails(deviceID, data);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+            } else {
+                logout();
+            }
         }
 
         function hideDetails(deviceID, ip) {
-            console.log("YOOOOOO");
             document.getElementById(`detail-button-d${deviceID}`).innerText = "Detailscan";
             document.getElementById(`detail-button-d${deviceID}`).addEventListener("click", () => scanDetailed(deviceID, ip));
-        }
-
-        function formatNetwork_old(resultData) {
-            for (let i = 0; i < resultData.length; i++) {
-                document.getElementById(`d${i+1}`).innerText = resultData[i].hostname ? resultData[i].hostname : "?";
-                document.getElementById(`t${i+1}`).innerHTML =
-                    `<tr><td class="device-network">MAC</td><td>${resultData[i].mac ? resultData[i].mac : "?"}</td></tr>\n`
-                    + `<tr><td class="device-network">IP</td><td>${resultData[i].ip ? resultData[i].ip : "?"}</td></tr>\n`
-                    + `<tr><td class="device-network">Vendor</td><td>${resultData[i].vendor ? resultData[i].vendor : "?"}</td></tr>`;
-            }
         }
 
         function formatNetwork(resultData) {
@@ -256,7 +147,7 @@
                 deviceTR.innerHTML = 
                         `<td class="py-3">`
                     +       `<a id="b-dropdown-d${i}" class="b-dropdown" data-toggle="collapse" href="#collapse-d${i}" role="button" aria-expanded="false" aria-controls="collapse-d${i}">`
-                    +           `<span class="b-dropdow">&#9660;  </span><h3 id="d${i}" style="display: inline-block;">${resultData[i].hostname ? resultData[i].hostname : "?"}</h3>`
+                    +           `<span class="b-dropdow">&#9660;  </span><h3 id="d${i}" style="display: inline-block;">${resultData[i].hostname ? resultData[i].hostname : (resultData[i].ip ? resultData[i].ip : (resultData[i].mac ? resultData[i].mac : "Unbekanntes Gerät"))}</h3>`
                     +       `</a>`
                     +       `<div class="t-device collapse" id="collapse-d${i}">`
                     +           `<table id="t${i}">`
@@ -295,7 +186,6 @@
                 + `<tr><td class="device-detail">Port</td><td>${resultDataPorts[i].port ? resultDataPorts[i].port : "?"}</td></tr>\n`
                 + `<tr><td class="device-detail">Protokol</td><td>${resultDataPorts[i].protocol ? resultDataPorts[i].protocol : "?"}</td></tr>\n`
                 + `<tr><td class="device-detail">Dienst</td><td>${resultDataPorts[i].service ? resultDataPorts[i].service : "?"}</td></tr>\n`
-                + `<tr><td class="device-detail">Methode</td><td>${resultDataPorts[i].method ? resultDataPorts[i].method : "?"}</td></tr>\n`
                 + `${(i < resultDataPorts.length - 1) ? '<tr><td colspan="2"><hr class="light"></td></tr>' : ''}`
                 + ``
             }
