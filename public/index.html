@@ -135,7 +135,6 @@
         }
 
         function hideDetails(deviceID, ip) {
-            console.log("YOOOOOO");
             document.getElementById(`detail-button-d${deviceID}`).innerText = "Detailscan";
             document.getElementById(`detail-button-d${deviceID}`).addEventListener("click", () => scanDetailed(deviceID, ip));
         }
@@ -148,7 +147,7 @@
                 deviceTR.innerHTML = 
                         `<td class="py-3">`
                     +       `<a id="b-dropdown-d${i}" class="b-dropdown" data-toggle="collapse" href="#collapse-d${i}" role="button" aria-expanded="false" aria-controls="collapse-d${i}">`
-                    +           `<span class="b-dropdow">&#9660;  </span><h3 id="d${i}" style="display: inline-block;">${resultData[i].hostname ? resultData[i].hostname : "?"}</h3>`
+                    +           `<span class="b-dropdow">&#9660;  </span><h3 id="d${i}" style="display: inline-block;">${resultData[i].hostname ? resultData[i].hostname : (resultData[i].ip ? resultData[i].ip : (resultData[i].mac ? resultData[i].mac : "Unbekanntes Gerät"))}</h3>`
                     +       `</a>`
                     +       `<div class="t-device collapse" id="collapse-d${i}">`
                     +           `<table id="t${i}">`
@@ -187,7 +186,6 @@
                 + `<tr><td class="device-detail">Port</td><td>${resultDataPorts[i].port ? resultDataPorts[i].port : "?"}</td></tr>\n`
                 + `<tr><td class="device-detail">Protokol</td><td>${resultDataPorts[i].protocol ? resultDataPorts[i].protocol : "?"}</td></tr>\n`
                 + `<tr><td class="device-detail">Dienst</td><td>${resultDataPorts[i].service ? resultDataPorts[i].service : "?"}</td></tr>\n`
-                + `<tr><td class="device-detail">Methode</td><td>${resultDataPorts[i].method ? resultDataPorts[i].method : "?"}</td></tr>\n`
                 + `${(i < resultDataPorts.length - 1) ? '<tr><td colspan="2"><hr class="light"></td></tr>' : ''}`
                 + ``
             }
