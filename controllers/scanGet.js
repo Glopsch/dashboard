@@ -5,28 +5,40 @@ const { exec } = require('child_process');
 
 nmap.nmapLocation = process.env.NMAP_LOCATION || "nmap"; // "nmap"; //default
 
+const fallbackNetworkIP     = "192.168.2.0";
+const fallbackNetworkSuffix = "24";
 
-
-// const networkIP     = "192.168.2.0";
-// const networkSuffix = "24";
 
 function getNetworkAddressAndSuffix() {
     exec("ip -o -f inet addr show | awk '/scope global/ {print $4}'", (err, localIP, stderr) => {
         if (err) {
-            console.error(err)
+            console.log(err)
             return undefined;
         } else {
             console.log(`stdout: ${localIP}`);
-            return { networkAddress, subnetMaskLength } = ip.cidrSubnet(localIP);
+            const { networkAddress, subnetMaskLength } = ip.cidrSubnet(localIP);
+            return { networkAddress, subnetMaskLength };
         }
     });
 }
 
 function handleNetworkScanGet(req, res) {
-    const { networkAddress, subnetMaskLength } = getNetworkAddressAndSuffix();
+    const netIpAndSuffix = getNetworkAddressAndSuffix();
+    let networkAddress, subnetMaskLength;
+    if(!netIpAndSuffix) {
+        networkAddress      = fallbackNetworkIP;
+        subnetMaskLength    = fallbackNetworkSuffix;
+    } else {
+        if( !netIpAndSuffix.networkAddress || !netIpAndSuffix.subnetMaskLength) {
+            networkAddress      = fallbackNetworkIP;
+            subnetMaskLength    = fallbackNetworkSuffix;
+        } else {
+            networkAddress      = netIpAndSuffix.networkAddress;
+            subnetMaskLength    = netIpAndSuffix.subnetMaskLength;
+        }
+    }
+
     console.log(networkAddress, subnetMaskLength);
-    // if( networkAddress == undefined || subnetMaskLength == undefined)
-    //     res.status(500);
 
     //    Accepts array or comma separarted string for custom nmap commands in the second argument.
     var nmapscan = new nmap.NmapScan(`${networkAddress}/${subnetMaskLength}`, '-sn -R -T5'); //-sn
