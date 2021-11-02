@@ -25,7 +25,7 @@ function handleNetworkScanGet(req, res) {
                 return;
             }
             console.log(`stdout: ${stdout}`);
-            const { networkAddress, subnetMaskLength } = ip.cidrSubnet(localIP);
+            const { networkAddress, subnetMaskLength } = ip.cidrSubnet(stdout);
             console.log(2.2, networkAddress, subnetMaskLength);
             nmapscan = new nmap.NmapScan(`${networkAddress}/${subnetMaskLength}`, '-sn -R -T5');
     
