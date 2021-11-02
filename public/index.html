@@ -58,6 +58,8 @@
     </footer>
 
     <script>
+        let state = {};
+
         scanNetwork();
 
         function logout() {
@@ -89,6 +91,7 @@
                     console.log(data);
                     document.getElementById('network_results').innerText = ""; //for debugging: JSON.stringify(data);
                     formatNetwork(data);
+                    state = data;
                 })
                 .catch((err) => {
                     console.log(err);
@@ -121,6 +124,7 @@
                 .then(data => {
                     console.log(data);
                     document.getElementById(`detail-button-d${deviceID}`).innerText = "Details ausblenden";
+                    // document.getElementById(`detail-button-d${deviceID}`).removeEventListener("click", () => scanDetailed(deviceID, data.ip));
                     document.getElementById(`detail-button-d${deviceID}`).addEventListener("click", () => hideDetails(deviceID, data.ip));
                     // document.getElementById(`detail-button-d${deviceID}`).onclick = `() => hideDetails('${deviceID}', '${ip}')`;
                     console.log("Helo");
@@ -135,7 +139,9 @@
         }
 
         function hideDetails(deviceID, ip) {
+
             document.getElementById(`detail-button-d${deviceID}`).innerText = "Detailscan";
+            document.getElementById(`detail-button-d${deviceID}`).removeEventListener("click", () => hideDetails(deviceID, ip));
             document.getElementById(`detail-button-d${deviceID}`).addEventListener("click", () => scanDetailed(deviceID, ip));
         }
 
@@ -166,7 +172,7 @@
         }
         function formatDetails(deviceID, resultData) {          
             let i = 0;
-            console.log(resultData[i].openPorts);
+            // console.log(resultData[i].openPorts && resultData[i].openPorts);
                 document.getElementById(`d${deviceID}`).innerText = resultData[i].hostname ? resultData[i].hostname : "?";
                 document.getElementById(`t${deviceID}`).innerHTML =
                       `<tr><td class="device-network">MAC</td><td>${resultData[i].mac ? resultData[i].mac : "?"}</td></tr>\n`
