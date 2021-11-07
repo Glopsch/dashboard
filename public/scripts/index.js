@@ -147,7 +147,7 @@ function formatNetwork(resultData) {
 function formatDetails(deviceID, resultData) {          
     let i = 0;
     // console.log(resultData[i].openPorts && resultData[i].openPorts);
-        document.getElementById(`d${deviceID}`).innerText = resultData[i].hostname ? resultData[i].hostname : "?";
+        document.getElementById(`d${deviceID}`).innerText = resultData[i].hostname ? resultData[i].hostname : (resultData[i].ip ? resultData[i].ip : (resultData[i].mac ? resultData[i].mac : "Unbekanntes Gerät"));
         document.getElementById(`t${deviceID}`).innerHTML =
               `<tr><td class="device-network">MAC</td><td>${resultData[i].mac ? resultData[i].mac : "?"}</td></tr>\n`
             + `<tr><td class="device-network">IP</td><td>${resultData[i].ip ? resultData[i].ip : "?"}</td></tr>\n`
