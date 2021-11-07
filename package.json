@@ -1,6 +1,6 @@
 {
   "name": "dashboard",
-  "version": "0.5.1",
+  "version": "1.0.0",
   "description": "Webbasiertes Dashboard zur Kontrolle und Analyse von Geräten im Heimnetzwerk",
   "main": "app.js",
   "scripts": {
