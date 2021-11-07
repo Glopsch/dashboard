@@ -14,6 +14,14 @@ const tokenExpiration = "180d";
 
 async function handleInitPost( req, res ) {
   
+    try {
+      if(fs.existsSync(path.join(__dirname, "../", "/data"))) {
+        return res.status( 401 ).json( { message: 'password already set' } );
+      }
+    } catch(err) {
+      console.log("data existance err:", err);
+    }
+
     console.log(req.body);
 
     try {
@@ -31,7 +39,7 @@ async function handleInitPost( req, res ) {
   
       if(initPw === process.env.INIT_PW) {
         const hashedPassword  = await bcryptjs.hash( newPw, 11 );
-        console.log(hashedPassword);
+        // console.log(hashedPassword);
 
         fs.writeFile(path.join(__dirname, "../", "/data"), hashedPassword, function(err) {
             if(err) {
@@ -66,27 +74,31 @@ async function handleLoginPost( req, res ) {
       const { password } = req.body;
       console.log(password);
 
-      fs.readFile(path.join(__dirname, "../", "/data"), 'utf8' , (err, data) => {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        console.log(data)
+      if(fs.existsSync(path.join(__dirname, "../", "/data"))) {
+        fs.readFile(path.join(__dirname, "../", "/data"), 'utf8' , (err, data) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log(data)
 
-        const isMatch = bcryptjs.compareSync( password, data );
-        console.log(isMatch);
+          const isMatch = bcryptjs.compareSync( password, data );
+          console.log(isMatch);
 
-        if ( !isMatch ) {
-          console.log(":(");
-          return res.status( 401 ).json( { message: 'wrong password' } );
-        }
+          if ( !isMatch ) {
+            console.log(":(");
+            return res.status( 401 ).json( { message: 'wrong password' } );
+          }
 
-        const token = jwt.sign( { networkID: "my-network" }, jwtSecret, { expiresIn: tokenExpiration } );
+          const token = jwt.sign( { networkID: "my-network" }, jwtSecret, { expiresIn: tokenExpiration } );
 
-        console.log(token);
-        console.log("token generated");
-        return res.json( { token } );
-      })
+          console.log(token);
+          console.log("token generated");
+          return res.json( { token } );
+        })
+      } else {
+        return res.status( 401 ).json( { message: 'not initialised' } );
+      }
 
     } catch ( err ) {
       console.log( err );

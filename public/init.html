@@ -11,6 +11,7 @@
 </head>
 
 <body>
+
     <header style="border-bottom: 1px solid #75FF38;">
         <nav class="navbar navbar-expand-lg navbar-dark">
             <a href="/"><h1 style="display: inline-table; color: #F6F0F4;"><span style="color: #75FF38">Dash</span>board</h1></a>
@@ -50,7 +51,9 @@
                       <code class="text-danger" id="pwRepeat-valid"></code>
                     </div>
                     <br>
-                    <button type="button" onclick="tryInit()" class="btn b-outline">Anmelden</button>
+                    <button type="button" onclick="tryInit()" class="btn b-outline">Initialisieren</button>
+                    <br>
+                    <code class="text-danger" id="pw-already-valid"></code>
                 </form>
             </div>
         </div>
@@ -77,52 +80,7 @@
 
     </footer>
 
-    <script>
-        function tryInit() {
-            const initPw = document.getElementById("initPw").value;
-            const newPw  = document.getElementById("newPw").value;
-            const newPwRepeat  = document.getElementById("newPwRepeat").value;
-            
-            if(newPw.length < 8) {
-                document.getElementById("newPw-valid").innerText = "Mindestens 8 Zeichen!";
-                return;
-            } else {
-                document.getElementById("newPw-valid").innerText = "";
-            }
-            if(newPw != newPwRepeat) {
-                document.getElementById("pwRepeat-valid").innerText = "Passwörter stimmen nicht überein!";
-                return;
-            } else {
-                document.getElementById("pwRepeat-valid").innerText = "";
-            }
-
-            console.log("Hello");
-            const formData = new FormData();
-            formData.append("initPw", initPw);
-            formData.append("newPw", newPw);
-            const searchParams = new URLSearchParams(formData);
-            // document.getElementById('login-indicator').innerText = "Authentifiziere...";
-            fetch(`/auth/init`, {
-                method: 'post',
-                body: searchParams
-            })
-            .then(response => {
-                console.log(response);
-                if(response.ok)
-                    return response.json();
-                else {
-                    if(response.status === 401)
-                        document.getElementById('initPw-valid').innerText = "Falsches Initialpasswort";
-                    throw new Error('Fehler');
-                }
-            })
-            .then(data => {
-                console.log(data);
-                window.localStorage.setItem('dash_tkn', data.token);
-                window.location.href = "/login.html";
-            });
-        }
-    </script>
+    <script src="scripts/init.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
